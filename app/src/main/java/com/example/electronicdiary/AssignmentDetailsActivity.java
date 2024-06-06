@@ -30,6 +30,7 @@ public class AssignmentDetailsActivity extends AppCompatActivity {
     private TextView textViewDescription;
     private TextView textViewGrade;
     private TextView textViewComment;
+    private DatabaseManager dbManager;
     private Button buttonEditAssignment;
     private Button buttonAttachFile;
     private Button buttonAddGrade;
@@ -40,6 +41,9 @@ public class AssignmentDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_assignment_details);
+
+        dbManager = new DatabaseManager(this); // Инициализация dbManager
+        dbManager.open();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -94,13 +98,13 @@ public class AssignmentDetailsActivity extends AppCompatActivity {
     }
 
 
-        private void requestStoragePermission() {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
-            } else {
-                openFilePicker();
-            }
+    private void requestStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
+        } else {
+            openFilePicker();
         }
+    }
 
     private void openFilePicker() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -133,11 +137,9 @@ public class AssignmentDetailsActivity extends AppCompatActivity {
                 String grade = data.getStringExtra("grade");
                 String comment = data.getStringExtra("comment");
 
-                textViewGrade.setText("Grade: " + grade);
-                textViewComment.setText("Comment: " + comment);
-
-                // Сохранение оценки и комментария в базе данных
-                // dbManager.insertGrade(assignmentId, grade, comment);
+                textViewGrade.setText("Оценка: " + grade);
+                textViewComment.setText("Комментарий: " + comment);
+                dbManager.insertGrade(assignmentId, grade, comment);
             }
         }
     }
@@ -150,5 +152,9 @@ public class AssignmentDetailsActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return true;
+    }
+    protected void onDestroy() {
+        super.onDestroy();
+        dbManager.close();
     }
 }
