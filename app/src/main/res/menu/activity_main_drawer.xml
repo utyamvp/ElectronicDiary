@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Главная" />
+    <item
+        android:id="@+id/nav_add_discipline"
+        android:title="Добавить дисциплину" />
+    <item
+        android:id="@+id/nav_add_student"
+        android:title="Добавить студента" />
+    <item
+        android:id="@+id/nav_add_group"
+        android:title="Добавить группу" />
+    <item
+        android:id="@+id/nav_add_assignment"
+        android:title="Добавить задание" />
+    <item
+        android:id="@+id/nav_add_grade"
+        android:title="Добавить оценку" />
+</menu>

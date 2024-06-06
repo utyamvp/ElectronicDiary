@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".StudentDetailActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:theme="?attr/actionBarTheme" />
+
+    <TextView
+        android:id="@+id/text_student_first_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Имя"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/text_student_last_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Фамилия"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/text_student_record_book_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Номёр зачётки"
+        android:textSize="16sp" />
+
+    <Button
+        android:id="@+id/button_edit_student"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Редактировать студента" />
+
+    <Button
+        android:id="@+id/button_delete_student"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Удалить студента" />
+</LinearLayout>
