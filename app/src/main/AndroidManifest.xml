@@ -45,5 +45,6 @@
         <activity android:name=".AddStudentActivity" />
         <activity android:name=".StudentDetailsActivity" />
         <activity android:name=".EditStudentActivity" />
+        <activity android:name=".GradeEntryActivity" />
     </application>
 </manifest>

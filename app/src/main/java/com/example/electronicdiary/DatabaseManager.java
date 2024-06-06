@@ -64,6 +64,19 @@ public class DatabaseManager {
         }
     }
 
+    public void insertGrade(long assignmentId, String grade, String comment) {
+        ContentValues values = new ContentValues();
+        values.put("assignment_id", assignmentId);
+        values.put("grade", grade);
+        values.put("comment", comment);
+
+        database.insert("Grades", null, values);
+    }
+
+    public Cursor getGradeDetailsByAssignmentId(long assignmentId) {
+        return database.query("grades", null, "assignment_id = ?", new String[]{String.valueOf(assignmentId)}, null, null, null);
+    }
+
     public long insertStudent(String firstName, String lastName, String recordBookNumber, long groupId) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseHelper.STUDENT_FIRST_NAME, firstName);

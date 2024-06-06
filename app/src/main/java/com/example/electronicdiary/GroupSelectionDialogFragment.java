@@ -32,8 +32,6 @@ public class GroupSelectionDialogFragment extends DialogFragment {
                 .setTitle("Выберите группу")
                 .setPositiveButton("Сохранить", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        // Обработка нажатия кнопки "Сохранить"
-                        // Здесь вы можете выполнить сохранение данных или другие действия
                         dialog.dismiss();
                     }
                 });
@@ -41,11 +39,8 @@ public class GroupSelectionDialogFragment extends DialogFragment {
         dbManager = new DatabaseManager(requireContext());
         dbManager.open();
 
-        // Получаем группы для отображения в списке
         Cursor cursor = dbManager.fetchGroups();
-
-        // Используем кастомный адаптер
-        adapter = new GroupCursorAdapter(requireContext(), cursor, disciplineId);
+        adapter = new GroupCursorAdapter(requireContext(), cursor, disciplineId, dbManager);
 
         ListView listView = view.findViewById(R.id.list_view_groups);
         listView.setAdapter(adapter);
@@ -53,13 +48,12 @@ public class GroupSelectionDialogFragment extends DialogFragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // Добавляем группу к дисциплине или удаляем ее, если она уже добавлена
                 if (DatabaseManager.isGroupAssignedToDiscipline(id, disciplineId)) {
                     dbManager.removeGroupFromDiscipline(id, disciplineId);
                 } else {
                     dbManager.insertGroupToDiscipline(id, disciplineId);
                 }
-                adapter.notifyDataSetChanged(); // Обновляем адаптер, чтобы отобразить изменения
+                adapter.notifyDataSetChanged();
             }
         });
 
@@ -73,8 +67,5 @@ public class GroupSelectionDialogFragment extends DialogFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (dbManager != null) {
-            dbManager.close();
-        }
     }
 }

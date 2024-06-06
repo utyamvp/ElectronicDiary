@@ -7,18 +7,10 @@
         <item
             android:id="@+id/nav_add_discipline"
             android:title="Добавить дисциплину" />
-        <item
-            android:id="@+id/nav_add_student"
-            android:title="Добавить студента" />
+
         <item
             android:id="@+id/nav_add_group"
             android:title="Добавить группу" />
-        <item
-            android:id="@+id/nav_add_assignment"
-            android:title="Добавить задание" />
-        <item
-            android:id="@+id/nav_add_grade"
-            android:title="Добавить оценку" />
         <item
             android:id="@+id/nav_group_list"
             android:title="Список групп" />

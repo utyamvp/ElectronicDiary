@@ -14,10 +14,10 @@ public class GroupCursorAdapter extends CursorAdapter {
     private long disciplineId;
     private DatabaseManager dbManager;
 
-    public GroupCursorAdapter(Context context, Cursor cursor, long disciplineId) {
+    public GroupCursorAdapter(Context context, Cursor cursor, long disciplineId, DatabaseManager dbManager) {
         super(context, cursor, 0);
         this.disciplineId = disciplineId;
-        this.dbManager = new DatabaseManager(context); // Создаем экземпляр DatabaseManager
+        this.dbManager = dbManager;
     }
 
     @Override
@@ -36,25 +36,19 @@ public class GroupCursorAdapter extends CursorAdapter {
         long groupId = cursor.getLong(cursor.getColumnIndexOrThrow("_id"));
         boolean isGroupAssigned = dbManager.isGroupAssignedToDiscipline(groupId, disciplineId);
 
-        // Устанавливаем видимость галочки в зависимости от статуса приписки группы
         checkImageView.setVisibility(isGroupAssigned ? View.VISIBLE : View.GONE);
 
-        // Устанавливаем обработчик нажатия на элемент списка
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Проверяем текущее состояние группы
                 if (isGroupAssigned) {
-                    // Если группа уже приписана к дисциплине, удаляем привязку
                     dbManager.removeGroupFromDiscipline(groupId, disciplineId);
-                    checkImageView.setVisibility(View.GONE); // Скрываем галочку
+                    checkImageView.setVisibility(View.GONE);
                 } else {
-                    // Если группа не приписана к дисциплине, добавляем привязку
                     dbManager.insertGroupToDiscipline(groupId, disciplineId);
-                    checkImageView.setVisibility(View.VISIBLE); // Отображаем галочку
+                    checkImageView.setVisibility(View.VISIBLE);
                 }
             }
         });
     }
-
 }

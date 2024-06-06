@@ -1,6 +1,5 @@
 package com.example.electronicdiary;
 
-import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.Manifest;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,10 +23,13 @@ public class AssignmentDetailsActivity extends AppCompatActivity {
 
     private static final int REQUEST_CODE_EDIT_ASSIGNMENT = 1;
     private static final int REQUEST_CODE_ATTACH_FILE = 2;
-    private static final int REQUEST_CODE_STORAGE_PERMISSION = 3;
+    private static final int REQUEST_CODE_GRADE_ENTRY = 3;
+    private static final int REQUEST_CODE_STORAGE_PERMISSION = 4;
 
     private TextView textViewTitle;
     private TextView textViewDescription;
+    private TextView textViewGrade;
+    private TextView textViewComment;
     private Button buttonEditAssignment;
     private Button buttonAttachFile;
     private Button buttonAddGrade;
@@ -43,21 +46,20 @@ public class AssignmentDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Assignment Details");
 
-        // Изменение цвета стрелки назад
         DrawableCompat.setTint(toolbar.getNavigationIcon(), ContextCompat.getColor(this, android.R.color.black));
 
         textViewTitle = findViewById(R.id.text_view_title);
         textViewDescription = findViewById(R.id.text_view_description);
+        textViewGrade = findViewById(R.id.text_view_grade);
+        textViewComment = findViewById(R.id.text_view_comment);
         buttonEditAssignment = findViewById(R.id.button_edit_assignment);
         buttonAttachFile = findViewById(R.id.button_attach_file);
         buttonAddGrade = findViewById(R.id.button_add_grade);
 
-        // Получение данных из Intent
         assignmentId = getIntent().getLongExtra("assignment_id", -1L);
         String title = getIntent().getStringExtra("assignment_title");
         String description = getIntent().getStringExtra("assignment_description");
 
-        // Установка данных в TextView
         textViewTitle.setText(title);
         textViewDescription.setText(description);
 
@@ -82,30 +84,23 @@ public class AssignmentDetailsActivity extends AppCompatActivity {
         buttonAddGrade.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Реализуйте логику добавления оценки
+                Intent intent = new Intent(AssignmentDetailsActivity.this, GradeEntryActivity.class);
+                intent.putExtra("assignment_id", assignmentId);
+                startActivityForResult(intent, REQUEST_CODE_GRADE_ENTRY);
             }
         });
+
+        loadAssignmentDetails();
     }
 
-    private void requestStoragePermission() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
-        } else {
-            openFilePicker();
-        }
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CODE_STORAGE_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                openFilePicker();
+        private void requestStoragePermission() {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE_STORAGE_PERMISSION);
             } else {
-                Toast.makeText(this, "Permission denied to read storage", Toast.LENGTH_SHORT).show();
+                openFilePicker();
             }
         }
-    }
 
     private void openFilePicker() {
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
@@ -133,16 +128,22 @@ public class AssignmentDetailsActivity extends AppCompatActivity {
                 // Обновите данные в базе данных
                 // dbManager.updateAssignment(assignmentId, newTitle, newDescription);
             }
+        } else if (requestCode == REQUEST_CODE_GRADE_ENTRY && resultCode == RESULT_OK) {
+            if (data != null) {
+                String grade = data.getStringExtra("grade");
+                String comment = data.getStringExtra("comment");
+
+                textViewGrade.setText("Grade: " + grade);
+                textViewComment.setText("Comment: " + comment);
+
+                // Сохранение оценки и комментария в базе данных
+                // dbManager.insertGrade(assignmentId, grade, comment);
+            }
         }
     }
 
     private void loadAssignmentDetails() {
         // Загрузка деталей задания из базы данных по assignmentId
-        // Пример:
-        // String title = dbManager.getAssignmentTitleById(assignmentId);
-        // String description = dbManager.getAssignmentDescriptionById(assignmentId);
-        // textViewTitle.setText(title);
-        // textViewDescription.setText(description);
     }
 
     @Override

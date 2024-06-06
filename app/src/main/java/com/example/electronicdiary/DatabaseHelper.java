@@ -42,6 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String GRADE_STUDENT_ID = "student_id";
     public static final String GRADE_ASSIGNMENT_ID = "assignment_id";
     public static final String GRADE_GRADE = "grade";
+    public static final String GRADE_COMMENT = "comment"; // Добавленный столбец для комментария
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -89,11 +90,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + GRADE_STUDENT_ID + " INTEGER, "
                 + GRADE_ASSIGNMENT_ID + " INTEGER, "
                 + GRADE_GRADE + " INTEGER NOT NULL, "
+                + GRADE_COMMENT + " TEXT, " // Новый столбец для комментария
                 + "FOREIGN KEY (" + GRADE_STUDENT_ID + ") REFERENCES " + TABLE_STUDENTS + "(" + STUDENT_ID + "), "
                 + "FOREIGN KEY (" + GRADE_ASSIGNMENT_ID + ") REFERENCES " + TABLE_ASSIGNMENTS + "(" + ASSIGNMENT_ID + "))";
         db.execSQL(createGradesTable);
     }
-
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (oldVersion < 4) {

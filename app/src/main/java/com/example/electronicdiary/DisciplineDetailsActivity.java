@@ -121,6 +121,9 @@ public class DisciplineDetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (!dbManager.isOpen()) {
+            dbManager.open();
+        }
         loadAssignments(); // Обновить данные из базы данных
     }
 
@@ -134,10 +137,18 @@ public class DisciplineDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (dbManager != null) {
+        super.onDestroy();
+        if (dbManager != null && dbManager.isOpen()) {
             dbManager.close();
         }
-        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (dbManager.isOpen()) {
+            dbManager.close();
+        }
     }
 
     @Override
